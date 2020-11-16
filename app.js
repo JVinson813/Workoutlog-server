@@ -9,6 +9,7 @@ const sequelize = require('./db');
 sequelize.sync();
 
 workoutapp.use(express.json());
+workoutapp.use(require('./middleware/headers'));
 workoutapp.use('/log', log);
 workoutapp.use('/user', user);
 

@@ -8,9 +8,10 @@ const jwt = require('jsonwebtoken');
 let validateSession = require('../middleware/validate-session');
 
 router.post('/', validateSession, function (request, response){
-    let Description = request.body.description.item;
-    let Definition = request.body.definition.item;
-    let Result = request.body.result.item;
+    console.log(request.body);
+    let Description = request.body.log.description;
+    let Definition = request.body.log.definition;
+    let Result = request.body.log.result;
     let Owner = request.user.id;
 
     LogModel
@@ -54,7 +55,7 @@ router.get('/:id', validateSession, function(request, response){
 
     LogModel
     .findOne({
-        where: { owner_id: data }
+        where: { id: data }
     }).then(
         function findOneSuccess(data){
             response.json(data);
@@ -68,17 +69,22 @@ router.get('/:id', validateSession, function(request, response){
 
 router.put('/:id', function(request, response){
     let data = request.params.id;
-    let description = request.body.description;
+    let Description = request.body.log.description;
+    let Definition = request.body.log.definition;
+    let Result = request.body.log.result;
 
     LogModel
     .update({
-        description: description
+        description: Description,
+        definition: Definition,
+        result: Result
+
     },
-    {where: {owner_id: data}}
+    {where: {id: data}}
     ).then(
         function updateSuccess(updatedLog) {
             response.json({
-                description: description
+                description: Description
             });
         },
         function updateError(err){
@@ -93,7 +99,7 @@ router.delete('/:id', function(req, res){
 
     LogModel
     .destroy({
-        where: { owner_id: data}
+        where: { id: data}
     }).then(
         function deleteLogSuccess(data){
             res.send("you removed a log");
